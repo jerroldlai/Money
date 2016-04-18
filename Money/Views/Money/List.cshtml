@@ -9,20 +9,20 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.no)
+            @Html.DisplayNameFor(model => model.id)
         </th>
         
         <th>
-            @Html.DisplayNameFor(model => model.category)
+            @Html.DisplayNameFor(model => model.categoryyy)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.money)
+            @Html.DisplayNameFor(model => model.Amounttt)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.date)
+            @Html.DisplayNameFor(model => model.dateee)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.description)
+            @Html.DisplayNameFor(model => model.remarkkk)
         </th>
         <th></th>
     </tr>
@@ -30,19 +30,23 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.no)
+            @Html.DisplayFor(modelItem => item.id)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.category)
+            @Html.DisplayFor(modelItem => item.categoryyy)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.money)
+            @Html.DisplayFor(modelItem => item.Amounttt)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.date)
+            @Html.DisplayFor(modelItem => item.dateee)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.description)
+            @Html.DisplayFor(modelItem => item.remarkkk)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Money", new { id = item.id.ToString() })
+            @Html.ActionLink("Delete", "Delete", new { id = item.id.ToString() })
         </td>
     </tr>
 }

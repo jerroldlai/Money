@@ -1,4 +1,5 @@
-﻿using Money.Views.ViewModel;
+﻿using Money.Models;
+using Money.Views.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,63 +10,77 @@ namespace Money.Controllers
 {
     public class MoneyController : Controller
     {
-        
+        private AccountDao dao = new AccountDao();
           
         // GET: Money
-        public ActionResult Money()
+        public ActionResult Money(MoneyViewModel pagedata)
         {
             List<SelectListItem> listItems = new List<SelectListItem>();
         listItems.Add(new SelectListItem
             {
                 Text = "請選擇",
-                Value = "請選擇"
+                Value = "-1"
             });
 
             listItems.Add(new SelectListItem
             {
                 Text = "收入",
-                Value = "收入"
+                Value = "0"
             });
             listItems.Add(new SelectListItem
             {
                 Text = "支出",
-                Value = "支出",
+                Value = "1",
             });
             ViewBag.CategroyItems = listItems;
-            return View();
+            string P_Id = pagedata.id;
+            if (P_Id != null)
+            {
+                if (pagedata.status == 1)
+                {
+                    int records = dao.Update(pagedata);//確定儲存更新
+                    return View();
+                }
+                else
+                {
+                    MoneyViewModel instance = dao.GetSingleRow(P_Id);//確定更新
+                    if (instance == null)
+                    {
+                        return View();
+                    }
+                    instance.status = 1;
+                    return View(instance);
+                }
+            }
+            else
+              if (pagedata.categoryyy!="-1" && pagedata.categoryyy != null)
+              {
+                int row=dao.Insert(pagedata);
+                return View();
+              }
+              else
+              {
+                ModelState.Clear();
+                return View();
+              }
             
         }
         
         public ActionResult List(MoneyViewModel pagedata)
         {
-            var source = new List<MoneyViewModel>();
-            if (pagedata.category!= null || 
-                pagedata.money != null ||
-                pagedata.description != null ||
-                pagedata.date != null)
+            var AccountLists = dao.GetAllLists();
+            return View(AccountLists);
+        }
+        [HttpGet]
+        public ActionResult Delete(MoneyViewModel pagedata)
+        {
+            MoneyViewModel instance = dao.GetSingleRow(pagedata.id);
+            if (instance == null)
             {
-                source.Add(new MoneyViewModel
-                {
-                    no = source.Count,
-                    category =pagedata.category,
-                    money =pagedata.money,
-                    date =pagedata.date,
-                    description =pagedata.description,
-                });
+                return HttpNotFound();
             }
-
-            for (int i = 0; i < 5; i++)
-            {
-                source.Add(new MoneyViewModel
-                {
-                    no = i,
-                    category = "支出",
-                    money = System.Convert.ToString(123 * i),
-                    date = DateTime.Now.AddDays(i+1).ToString("yyyy-MM-dd"),
-                    description = "",
-                });
-            }
-            return View(source);
+            int result = dao.Delete(pagedata.id);
+            return RedirectToAction("Money");
         }
     }
 }
